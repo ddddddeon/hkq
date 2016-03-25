@@ -1,4 +1,3 @@
-
 var Queue = function(name) {
   this.name = name;
   this.queue = [];
