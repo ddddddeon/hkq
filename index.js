@@ -3,8 +3,17 @@ var queue = require('./queue');
 
 var queues = {};
 
+function respond(sock, response) {
+  sock.write(response);
+  console.log('  ^   ' + response.trim());
+};
+
 net.createServer(function(sock) {
   sock.on('data', function(data) {
+    var q;
+    var response;
+    
+    console.log('> ' + data.toString().trim());
     if (process.env.DEBUG) {
       console.log(data.toString().split(' '));
       console.log(queues);
@@ -16,26 +25,24 @@ net.createServer(function(sock) {
     /* declare queue */
     if (data[0] === 'DCQ') {
       if (typeof data[1] === 'undefined') {
-        sock.write('ERR nothing to declare\n');
+        respond(sock, 'ERR nothing to declare\n');
       } else if (typeof queues[data[1].trim()] !== 'undefined') {
-        sock.write('ERR queue already declared\n');
+        respond(sock, 'ERR queue already declared\n');
       } else {
         sock.name = data[1].trim();
         queues[sock.name] = new queue.Queue(sock.name);
-        sock.write("DOK " + sock.name + '\n');
+        respond(sock, 'DOK ' + sock.name + '\n');
       }
     }
 
-    var q;
-    
     /* enqueue */
     if (data[0] === 'ENQ') {
       data.shift();
       if (typeof data[0] === 'undefined' ||
           typeof queues[data[0].trim()] === 'undefined') {
-        sock.write('ERR nonexistent queue\n');
+        respond(sock, 'ERR nonexistent queue\n');
       } else if (data.length < 2) {
-        sock.write('ERR nothing to enqueue\n');
+        respond(sock, 'ERR nothing to enqueue\n');
       } else {
         data[0] = data[0].trim();
         q = queues[data[0]];
@@ -43,7 +50,7 @@ net.createServer(function(sock) {
         data = data.join(' ').trim();
 
         q.enqueue(data);
-        sock.write('EOK ' + q.queue.length + ' ' + data + '\n');
+        respond(sock, 'EOK ' + q.queue.length + ' ' + data + '\n');
       }
     }
 
@@ -53,16 +60,16 @@ net.createServer(function(sock) {
 
       if (typeof data[0] === 'undefined' ||
           typeof queues[data[0].trim()] === 'undefined') {
-        sock.write('ERR nonexistent queue\n');
+        respond(sock, 'ERR nonexistent queue\n');
       } else {
         data[0] = data[0].trim();
         q = queues[data[0]];
 
         if (q.queue.length < 1) {
-          sock.write("NULL empty queue\n");
+          respond(sock, "NULL empty queue\n");
         } else {
           var item = q.dequeue();
-          sock.write(item + '\n');
+          respond(sock, item + '\n');
         }
       }
     }
