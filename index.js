@@ -7,8 +7,6 @@ net.createServer(function(sock) {
   sock.initialized = false;
 
   sock.on('data', function(data) {
-    var q;
-    
     if (process.env.DEBUG) {
       console.log(data.toString().split(' '));
       console.log(queues);
@@ -16,7 +14,8 @@ net.createServer(function(sock) {
     
     data = data.toString().split(' ');
     data[0] = data[0].trim();
-
+    
+    /* declare queue */
     if (data[0] === 'DCQ') {
       if (typeof data[1] === 'undefined') {
         sock.write('ERR nothing to declare\n');
@@ -29,6 +28,9 @@ net.createServer(function(sock) {
       }
     }
 
+    var q;
+    
+    /* enqueue */
     if (data[0] === 'ENQ') {
       data.shift();
       if (typeof queues[data[0]] === 'undefined') {
@@ -45,6 +47,7 @@ net.createServer(function(sock) {
       }
     }
 
+    /* dequeue */
     if (data[0] === 'DEQ') {
       data.shift();
 
