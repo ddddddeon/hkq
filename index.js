@@ -16,37 +16,41 @@ net.createServer(function(sock) {
     data[0] = data[0].trim();
 
     if (data[0] === 'DCQ') {
-      sock.name = data[1].trim();
-      queues[sock.name] = new queue.Queue(sock.name);
-
-      sock.initialized = true;
-      sock.write("DOK " + sock.name + '\n');
+      if (typeof data[1] === 'undefined') {
+        sock.write('ERR nothing to declare\n');
+      } else {
+        sock.name = data[1].trim();
+        queues[sock.name] = new queue.Queue(sock.name);
+        
+        sock.initialized = true;
+        sock.write("DOK " + sock.name + '\n');
+      }
     }
 
     if (data[0] === 'ENQ') {
       data.shift();
-      
-      if (typeof queues[data[0].trim()] === 'undefined') {
-        sock.write('ERR nonexistent queue ' + data[0]);
+      if (typeof queues[data[0]] === 'undefined') {
+        sock.write('ERR nonexistent queue ' + data[0] + '\n');
       } else if (data.length < 2) {
         sock.write('ERR nothing to enqueue\n');
       } else {
+        data[0] = data[0].trim();
         var q = queues[data[0]];
         data.shift();
-        data = data.join(' ');
-        q.enqueue(data.trim());
-        sock.write('EOK ' + q.queue.length + ' ' + data)
+        data = data.join(' ').trim();
+        q.enqueue(data);
+        sock.write('EOK ' + q.queue.length + ' ' + data + '\n');
       }
     }
 
     if (data[0] === 'DEQ') {
       data.shift();
-      
-      if (typeof queues[data[0].trim()] === 'undefined') {
-        sock.write('ERR nonexistent queue ' + data[0]);
-      } else {
-        var q = queues[data[0].trim()]
 
+      if (typeof queues[data[0]] === 'undefined') {
+        sock.write('ERR nonexistent queue ' + data[0].trim() + '\n');
+      } else {
+        data[0] = data[0].trim();
+        var q = queues[data[0]];
         if (q.queue.length < 1) {
           sock.write("NULL empty queue\n");
         } else {
