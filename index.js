@@ -7,6 +7,8 @@ net.createServer(function(sock) {
   sock.initialized = false;
 
   sock.on('data', function(data) {
+    var q;
+    
     if (process.env.DEBUG) {
       console.log(data.toString().split(' '));
       console.log(queues);
@@ -35,7 +37,7 @@ net.createServer(function(sock) {
         sock.write('ERR nothing to enqueue\n');
       } else {
         data[0] = data[0].trim();
-        var q = queues[data[0]];
+        q = queues[data[0]];
         data.shift();
         data = data.join(' ').trim();
         q.enqueue(data);
@@ -50,7 +52,7 @@ net.createServer(function(sock) {
         sock.write('ERR nonexistent queue ' + data[0].trim() + '\n');
       } else {
         data[0] = data[0].trim();
-        var q = queues[data[0]];
+        q = queues[data[0]];
         if (q.queue.length < 1) {
           sock.write("NULL empty queue\n");
         } else {
