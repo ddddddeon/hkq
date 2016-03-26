@@ -1,3 +1,4 @@
-module.exports.server = require('./lib/server');
-module.exports.client = require('./lib/client');
+
+module.exports.Server = require('./lib/server').Server;
+module.exports.Client = require('./lib/client').Client;
 
