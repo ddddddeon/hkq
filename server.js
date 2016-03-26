@@ -28,7 +28,7 @@ function dumpToDisk() {
 function respond(sock, response) {
   sock.write(response);
   sock.pipe(sock);
-  console.log('  ^   ' + response.trim());
+  console.log('^ ' + response.trim());
 };
 
 function declareQueue(data, sock) {
@@ -77,8 +77,10 @@ function dequeue(data, sock) {
   }
 }
 
-function startServer() {
+function startServer(port) {
   loadFromDisk();
+  console.log('+ accepting connections on port ' + port);
+  
   var server = net.createServer(function(sock) {
     sock.on('data', function(d) {
       sock.setKeepAlive(true);
@@ -104,9 +106,9 @@ function startServer() {
   });
 
   server.timeout = 0;
-  server.listen(9090);
+  server.listen(port);
   
   setInterval(dumpToDisk, 60 * 1000);
 }
 
-startServer();
+startServer(9090);
