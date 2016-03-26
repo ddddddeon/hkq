@@ -80,7 +80,7 @@ function dequeue(data, sock) {
 
 function startServer() {
   loadFromDisk();
-  server = net.createServer(function(sock) {
+  var server = net.createServer(function(sock) {
     sock.on('data', function(d) {
       sock.setKeepAlive(true);
       d.toString().split('\n').forEach(function(data) { 
