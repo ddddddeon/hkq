@@ -13,16 +13,16 @@ function loadFromDisk() {
     newQueue.messages = messages;
     queues[key] = newQueue;
   });
-  console.log('+...done.');
+  console.log('+ ...done.');
 }
 
 function dumpToDisk() {
-  console.log('+++ dumping queue data to disk...');
+  console.log('+ dumping queue data to disk...');
   fs.writeFile('./queues.json', JSON.stringify(queues), function(err) {
     if (err) {
       return console.log(err);
     }
-    return console.log('+++ dumped queue data to disk');
+    return console.log('+ dumped queue data to disk');
   });
 }
 
@@ -70,7 +70,7 @@ function dequeue(data, sock) {
     data[0] = data[0].trim();
     var q = queues[data[0]];
     if (q.messages.length < 1) {
-      respond(sock, "NULL empty queue\n");
+      respond(sock, 'NULL empty queue\n');
     } else {
       var item = q.dequeue();
       respond(sock, 'DOK ' + q.messages.length + ' ' + item + '\n');
