@@ -78,37 +78,38 @@ function dequeue(data, sock) {
   }
 }
 
-function startServer(port) {
-  loadFromDisk();
-  console.log('+ accepting connections on port ' + port);
-  
-  var server = net.createServer(function(sock) {
-    sock.on('data', function(d) {
-      sock.setKeepAlive(true);
-      d.toString().split('\n').forEach(function(data) { 
-        console.log('> ' + data.toString().trim());
-        data = data.toString().split(' ');
-        data[0] = data[0].trim();
-
-        if (data[0] === 'DCQ') {
-          declareQueue(data, sock);
-        } else if (data[0] === 'ENQ') {
-          enqueue(data, sock);
-        } else if (data[0] === 'DEQ') {
-          dequeue(data, sock);
-        }
-      });
-    });
-    
-    sock.on('error', function(err) {
-      console.log('X ' + err);
-      sock.destroy();
+function parseRequest(sock) {
+  sock.on('data', function(d) {
+    sock.setKeepAlive(true);
+    d.toString().split('\n').forEach(function(data) { 
+      console.log('> ' + data.toString().trim());
+      data = data.toString().split(' ');
+      data[0] = data[0].trim();
+      
+      if (data[0] === 'DCQ') {
+        declareQueue(data, sock);
+      } else if (data[0] === 'ENQ') {
+        enqueue(data, sock);
+      } else if (data[0] === 'DEQ') {
+        dequeue(data, sock);
+      }
     });
   });
 
+  sock.on('error', function(err) {
+      console.log('X ' + err);
+      sock.destroy();
+  });
+}
+
+function startServer(port) {
+  loadFromDisk();
+
+  console.log('+ accepting connections on port ' + port);
+  var server = net.createServer(parseRequest);
   server.timeout = 0;
   server.listen(port);
-  
+
   setInterval(dumpToDisk, 60 * 1000);
 }
 
