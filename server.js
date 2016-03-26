@@ -1,14 +1,39 @@
-
+var fs = require('fs');
 var net = require('net');
 var queue = require('./queue');
-
 var queues = {};
+
+function loadFromDisk() {
+  console.log('+ loading queues from disk...');
+  var savedQueues = require('./queues.json');
+
+  Object.keys(savedQueues).forEach(function(key) {
+    var messages = savedQueues[key].queue;
+    var newQueue = new queue.Queue(key);
+    newQueue.queue = messages;
+    queues[key] = newQueue;
+  });
+
+  console.log('+...done.');
+}
+
+function dumpToDisk() {
+  console.log('+++ dumping queue data to disk...');
+  fs.writeFile('./queues.json', JSON.stringify(queues), function(err) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('+++ dumped queue data to disk:');
+  });
+}
 
 function respond(sock, response) {
   sock.write(response);
   sock.pipe(sock);
   console.log('  ^   ' + response.trim());
 };
+
+loadFromDisk();
 
 server = net.createServer(function(sock) {
   sock.on('data', function(d) {
@@ -82,10 +107,12 @@ server = net.createServer(function(sock) {
   });
 
   sock.on('error', function(err) {
-    console.log('++ ' + err);
+    console.log('X ' + err);
     sock.destroy();
   });
 });
 
 server.timeout = 0;
 server.listen(9090);
+
+setInterval(dumpToDisk, 60 * 1000);
