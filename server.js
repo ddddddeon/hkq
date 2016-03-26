@@ -6,7 +6,6 @@ var queues = {};
 function loadFromDisk() {
   console.log('+ loading queues from disk...');
   var savedQueues = require('./queues.json');
-
   Object.keys(savedQueues).forEach(function(key) {
     var messages = savedQueues[key].messages;
     var newQueue = new queue.Queue(key);
