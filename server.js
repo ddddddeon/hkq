@@ -8,9 +8,9 @@ function loadFromDisk() {
   var savedQueues = require('./queues.json');
 
   Object.keys(savedQueues).forEach(function(key) {
-    var messages = savedQueues[key].queue;
+    var messages = savedQueues[key].messages;
     var newQueue = new queue.Queue(key);
-    newQueue.queue = messages;
+    newQueue.messages = messages;
     queues[key] = newQueue;
   });
 
@@ -23,7 +23,7 @@ function dumpToDisk() {
     if (err) {
       return console.log(err);
     }
-    console.log('+++ dumped queue data to disk:');
+    console.log('+++ dumped queue data to disk');
   });
 }
 
@@ -80,7 +80,7 @@ server = net.createServer(function(sock) {
           data = data.join(' ').trim();
           
           q.enqueue(data);
-          respond(sock, 'EOK ' + q.queue.length + ' ' + data + '\n');
+          respond(sock, 'EOK ' + q.messages.length + ' ' + data + '\n');
         }
       }
       
@@ -95,11 +95,11 @@ server = net.createServer(function(sock) {
           data[0] = data[0].trim();
           q = queues[data[0]];
           
-          if (q.queue.length < 1) {
+          if (q.messages.length < 1) {
             respond(sock, "NULL empty queue\n");
           } else {
             var item = q.dequeue();
-            respond(sock, 'DOK ' + q.queue.length + ' ' + item + '\n');
+            respond(sock, 'DOK ' + q.messages.length + ' ' + item + '\n');
           }
         }
       }

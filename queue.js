@@ -1,13 +1,13 @@
 var Queue = function(name) {
   this.name = name;
-  this.queue = [];
+  this.messages = [];
 
   this.enqueue = function(body) {
-    this.queue.push(body);
+    this.messages.push(body);
   };
 
   this.dequeue = function() {
-    var first = this.queue.shift();
+    var first = this.messages.shift();
     return first;
   };
 }
