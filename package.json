@@ -1,0 +1,20 @@
+{
+  "name": "sfq",
+  "version": "0.0.1",
+  "description": "A Simple Fucking Queue",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node app/index",
+    "test": "node test/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ddddddeon/sfq"
+  },
+  "author": "d'Eon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ddddddeon/sfq/issues"
+  },
+  "homepage": "https://github.com/ddddddeon/sfq"
+}
