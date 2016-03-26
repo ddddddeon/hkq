@@ -2,7 +2,7 @@
   "name": "sfq",
   "version": "0.0.1",
   "description": "A Simple Fucking Queue",
-  "main": "lib/server.js",
+  "main": "lib/client.js",
   "scripts": {
     "server": "node app/server",
     "client": "python app/client.py",
