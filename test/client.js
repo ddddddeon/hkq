@@ -1,3 +1,3 @@
-var client = require("../lib/client").Client;
+var client = require('../index').client;
 
-console.log(client.name);
+console.log(client);

@@ -1,3 +1,3 @@
-var server = require('../lib/server');
+var server = require('../index').server;
 
 server.startServer();
