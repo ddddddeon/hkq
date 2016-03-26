@@ -29,6 +29,7 @@ function respond(sock, response) {
   sock.write(response);
   sock.pipe(sock);
   console.log('^ ' + response.trim());
+  sock.destroy();
 };
 
 function declareQueue(data, sock) {
