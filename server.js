@@ -56,7 +56,6 @@ function enqueue(data, sock) {
     var q = queues[data[0]];
     data.shift();
     data = data.join(' ').trim();
-    
     q.enqueue(data);
     respond(sock, 'EOK ' + q.messages.length + ' ' + data + '\n');
   }
@@ -64,14 +63,12 @@ function enqueue(data, sock) {
 
 function dequeue(data, sock) {
   data.shift();
-  
   if (typeof data[0] === 'undefined' ||
       typeof queues[data[0].trim()] === 'undefined') {
     respond(sock, 'ERR nonexistent queue\n');
   } else {
     data[0] = data[0].trim();
     var q = queues[data[0]];
-    
     if (q.messages.length < 1) {
       respond(sock, "NULL empty queue\n");
     } else {
@@ -83,24 +80,14 @@ function dequeue(data, sock) {
 
 function startServer() {
   loadFromDisk();
-  
   server = net.createServer(function(sock) {
     sock.on('data', function(d) {
       sock.setKeepAlive(true);
       d.toString().split('\n').forEach(function(data) { 
-        var q;
-        var response;
-        
         console.log('> ' + data.toString().trim());
-        if (process.env.DEBUG) {
-          console.log(data.toString().split(' '));
-          console.log(queues);
-          sock.destroy();
-        }
-        
         data = data.toString().split(' ');
         data[0] = data[0].trim();
-        
+
         if (data[0] === 'DCQ') {
           declareQueue(data, sock);
         } else if (data[0] === 'ENQ') {
