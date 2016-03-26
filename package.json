@@ -4,8 +4,10 @@
   "description": "A Simple Fucking Queue",
   "main": "lib/server.js",
   "scripts": {
-    "start": "node app/index",
-    "test": "node test/test"
+    "server": "node app/server",
+    "client": "python app/client.py",
+    "test-server": "node test/server",
+    "test-client": "node test/client"
   },
   "repository": {
     "type": "git",
