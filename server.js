@@ -6,11 +6,13 @@ var queues = {};
 
 function respond(sock, response) {
   sock.write(response);
+  sock.pipe(sock);
   console.log('  ^   ' + response.trim());
 };
 
-net.createServer(function(sock) {
+server = net.createServer(function(sock) {
   sock.on('data', function(d) {
+    sock.setKeepAlive(true);
     d.toString().split('\n').forEach(function(data) { 
       var q;
       var response;
@@ -19,6 +21,7 @@ net.createServer(function(sock) {
       if (process.env.DEBUG) {
         console.log(data.toString().split(' '));
         console.log(queues);
+        sock.destroy();
       }
       
       data = data.toString().split(' ');
@@ -77,4 +80,12 @@ net.createServer(function(sock) {
       }
     });
   });
-}).listen(9090);
+
+  sock.on('error', function(err) {
+    console.log('++ ' + err);
+    sock.destroy();
+  });
+});
+
+server.timeout = 0;
+server.listen(9090);
