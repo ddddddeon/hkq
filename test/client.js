@@ -1,4 +1,3 @@
-var Server = require('../index').Server;
 var Client = require('../index').Client;
 
 var conf = {
