@@ -8,3 +8,6 @@ var conf = {
 
 var server = new Server(conf);
 server.startServer();
+server.on('serving', function() {
+  console.log('event emitter is working!');
+});
