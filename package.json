@@ -7,7 +7,8 @@
     "server": "node app/server",
     "client": "python app/client.py",
     "server-test": "node test/server",
-    "client-test": "node test/client"
+    "client-test": "node test/client",
+    "hybrid-test": "node test/hybrid"
   },
   "repository": {
     "type": "git",
