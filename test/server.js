@@ -7,7 +7,6 @@ var conf = {
 };
 
 var server = new Server(conf);
-server.startServer();
-server.on('serving', function() {
-  console.log('event emitter is working!');
+server.startServer(function() {
+  console.log('* callback is working!');
 });

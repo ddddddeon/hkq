@@ -9,9 +9,7 @@ var clientConfig = {
 };
 
 var server = new Server();
-server.startServer();
-
-server.on('serving', function() {
+server.startServer(function() {
   var client = new Client(clientConfig);
 
   var sendMessages = function(err, data) {
@@ -28,4 +26,3 @@ server.on('serving', function() {
 
   client.declareQueue("test", sendMessages);
 });
-
