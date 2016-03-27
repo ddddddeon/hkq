@@ -6,8 +6,8 @@
   "scripts": {
     "server": "node app/server",
     "client": "python app/client.py",
-    "test-server": "node test/server",
-    "test-client": "node test/client"
+    "server-test": "node test/server",
+    "client-test": "node test/client"
   },
   "repository": {
     "type": "git",
