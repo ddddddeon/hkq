@@ -5,7 +5,6 @@ var conf = {
   'host': 'localhost'
 };
 
-
 var client = new Client(conf);
 
 client.enqueue("test", "first message", function(err, data) {
