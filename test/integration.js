@@ -6,34 +6,53 @@ var Client = sfq.Client;
 var server;
 var client;
 
-var testType = process.env.SFQ_TEST_TYPE;
+var testType = process.env.SFQ_TEST_TYPE || '';
+var clientType = process.env.SFQ_CLIENT_TYPE || '';
 
 var clientConfig = {
   'port': 9090,
   'host': 'localhost'
 };
 
-var sendMessages = function(err, data) {
-  if (err) console.log(err);
-  
+var clientCallback = function(err, data) {
+  if (err) {
+    console.log('X client received error: %s %s', err.code, err.address);
+    return;
+  } else {
+    if (testType !== 'hybrid') {
+      console.log('+ ' + data);
+    }
+  }
+}
+
+var enqueueMessages = function(err, data) {
+  clientCallback(err, data);
+
   var i = 0;
   setInterval(function () {
     i++;
-    client.enqueue("test", "message " + i, function(err, data) {
-      if (err) {
-        console.log('X client received error: %s %s', err.code, err.address);
-      } else {
-        if (testType !== 'hybrid') {
-          console.log('+ ' + data);
-        }
-      }
-    });
+    client.enqueue('test', 'message number ' + i, clientCallback);
+  }, 10);
+};
+
+var dequeueMessages = function(err, data) {
+  clientCallback(err, data);
+
+  var i = 0;
+  setInterval(function () {
+    i++;
+    client.dequeue('test', clientCallback);
   }, 10);
 };
 
 var runClient = function() {
   client = new Client(clientConfig);
-  client.declareQueue("test", sendMessages);
+  
+  if (clientType.match(/deq/)) {
+    client.declareQueue('test', dequeueMessages);
+  } else {
+    client.declareQueue('test', enqueueMessages);
+  }
 };
 
 if (testType === 'hybrid') {
