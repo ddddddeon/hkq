@@ -10,8 +10,8 @@ var testType = process.env.SFQ_TEST_TYPE || '';
 var clientType = process.env.SFQ_CLIENT_TYPE || '';
 
 var clientConfig = {
-  'port': 9090,
-  'host': 'localhost'
+  'port': process.env.SFQ_CLIENT_PORT || 9090,
+  'host': process.env.SFQ_CLIENT_HOST || 'localhost'
 };
 
 var clientCallback = function(err, data) {
