@@ -21,7 +21,7 @@ var sendMessages = function(err, data) {
     i++;
     client.enqueue("test", "message " + i, function(err, data) {
       if (err) {
-        console.log('X client-side error! %s %s', err.code, err.address);
+        console.log('X client received error: %s %s', err.code, err.address);
       } else {
         if (testType !== 'hybrid') {
           console.log('+ ' + data);
