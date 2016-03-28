@@ -6,9 +6,9 @@
   "scripts": {
     "server": "node app/server",
     "client": "python app/client.py",
-    "server-test": "node test/server",
-    "client-test": "node test/client",
-    "hybrid-test": "node test/hybrid"
+    "server-test": "SFQ_TEST_TYPE=server node test/integration",
+    "client-test": "SFQ_TEST_TYPE=client node test/integration",
+    "hybrid-test": "SFQ_TEST_TYPE=hybrid node test/integration"
   },
   "repository": {
     "type": "git",
