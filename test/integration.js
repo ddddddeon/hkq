@@ -16,7 +16,7 @@ var clientConfig = {
 
 var clientCallback = function(err, data) {
   if (err) {
-    console.log('X client received error: %s %s', err.code, err.address);
+    console.log('X client received error: %s %s', err.code, err.address || '');
     return;
   } else {
     if (testType !== 'hybrid') {
