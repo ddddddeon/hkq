@@ -25,44 +25,36 @@ var clientCallback = function(err, data) {
   }
 }
 
-var enqueueMessages = function(err, data) {
+var sendMessages = function(err, data) {
   clientCallback(err, data);
-
   var i = 0;
   setInterval(function () {
     i++;
-    client.enqueue('test', 'message number ' + i, clientCallback);
-  }, 10);
-};
-
-var dequeueMessages = function(err, data) {
-  clientCallback(err, data);
-
-  var i = 0;
-  setInterval(function () {
-    i++;
-    client.dequeue('test', clientCallback);
+    if (clientType.match(/deq/)) {
+      client.dequeue('test', clientCallback);
+    } else {
+      client.enqueue('test', 'message number ' + i, clientCallback);
+    }
   }, 10);
 };
 
 var runClient = function() {
   client = new Client(clientConfig);
-  
-  if (clientType.match(/deq/)) {
-    client.declareQueue('test', dequeueMessages);
+  client.declareQueue('test', sendMessages);
+};
+
+var runTests = function() {
+  if (testType === 'hybrid') {
+    server = new Server();
+    server.startServer(runClient);
+  } else if (testType === 'server') {
+    server = new Server();
+    server.startServer();
   } else {
-    client.declareQueue('test', enqueueMessages);
+    runClient();
   }
 };
 
-if (testType === 'hybrid') {
-  server = new Server();
-  server.startServer(runClient);
-} else if (testType === 'server') {
-  server = new Server();
-  server.startServer();
-} else {
-  runClient();
-}
+runTests();
 
 
