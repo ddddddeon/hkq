@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var path = require('path');
 var argv = require('minimist')(process.argv.slice(2));
+var jshint = require('gulp-jshint');
 
 var server;
 var client;
@@ -112,4 +113,10 @@ gulp.task('hybrid', function() {
     }
     runClient();
   });
+});
+
+gulp.task('jshint', function() {
+  gulp.src(['../{scripts,test,app,lib}/*.js'])
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
