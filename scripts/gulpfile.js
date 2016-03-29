@@ -1,3 +1,4 @@
+var fs = require('fs');
 var gulp = require('gulp');
 var path = require('path');
 var argv = require('minimist')(process.argv.slice(2));
@@ -10,7 +11,6 @@ var clientType = argv.type ||
                  argv.client_type ||
                  process.env.SFQ_CLIENT_TYPE ||
                  'enqueue';
-
 var queue = argv.queue ||
             process.env.SFQ_QUEUE ||
             'test';
@@ -69,7 +69,7 @@ var runServer = function(cb) {
                     process.env.SFQ_DUMP_INTERVAL ||
                     1
   };
-  
+
   server = new (require('../index')).Server(conf);
 
   server.startServer(function(err, serving) {
@@ -88,9 +88,20 @@ var runServer = function(cb) {
   });
 };
 
+var runHybrid = function() {
+  runServer(function(err, serving) {
+    if (err) {
+      console.log('could not start server', err);
+      process.exit(1);
+    }
+    runClient();
+  });
+};
+
+
 gulp.task('serve', ['server']);
 gulp.task('server', runServer);
-
+gulp.task('hybrid', runHybrid);
 gulp.task('client', runClient);
 
 gulp.task('enq', ['enqueue']);
@@ -105,18 +116,17 @@ gulp.task('dequeue', function() {
   runClient();
 });
 
-gulp.task('hybrid', function() {
-  runServer(function(err, serving) {
-    if (err) {
-      console.log('could not start server', err);
-      process.exit(1);
-    }
-    runClient();
-  });
-});
-
 gulp.task('jshint', function() {
   gulp.src(['../{scripts,test,app,lib}/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
+});
+
+gulp.task('flush', function() {
+  var dumpPath = argv.path ||
+                 argv.dumpPath ||
+                 process.env.SFQ_LISTEN_PORT ||
+                 './queues.json';
+
+  fs.unlinkSync(dumpPath);
 });
