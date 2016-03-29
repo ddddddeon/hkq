@@ -39,11 +39,11 @@ var sendMessages = function(err, data) {
 
 var runClient = function() {
   var conf = {
-    'port': argv.port ||
+    'port': argv.p || argv.port ||
             process.env.SFQ_LISTEN_PORT ||
             9090,
 
-    'host': argv.host ||
+    'host': argv.h || argv.host ||
             argv.client_host ||
             process.env.SFQ_CLIENT_HOST ||
             'localhost'
@@ -55,7 +55,7 @@ var runClient = function() {
 
 var runServer = function(cb) {
   var conf = {
-    'listenPort':   argv.port ||
+    'listenPort':   argv.p || argv.port ||
                     argv.listenPort ||
                     process.env.SFQ_LISTEN_PORT ||
                     9090,
