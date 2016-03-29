@@ -7,7 +7,7 @@ var jshint = require('gulp-jshint');
 var server;
 var client;
 
-var clientType = argv.type ||
+var clientType = argv.t || argv.type ||
                  argv.client_type ||
                  process.env.SFQ_CLIENT_TYPE ||
                  'enqueue';
