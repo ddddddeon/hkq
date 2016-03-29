@@ -102,7 +102,7 @@ gulp.task('dequeue', function() {
 gulp.task('hybrid', function() {
   runServer(function(err, serving) {
     if (err) {
-      console.log('could not start server');
+      console.log('could not start server', err);
       process.exit(1);
     }
     runClient();
