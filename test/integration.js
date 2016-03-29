@@ -23,7 +23,7 @@ var clientCallback = function(err, data) {
       console.log('+ ' + data);
     }
   }
-}
+};
 
 var sendMessages = function(err, data) {
   clientCallback(err, data);
