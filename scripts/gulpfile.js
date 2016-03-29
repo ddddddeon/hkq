@@ -130,3 +130,6 @@ gulp.task('flush', function() {
 
   fs.unlinkSync(dumpPath);
 });
+
+process.on('SIGINT', process.exit);
+process.on('SIGTERM', process.exit);
