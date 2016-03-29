@@ -29,7 +29,7 @@ var sendMessages = function(err, data) {
   var i = 0;
   setInterval(function () {
     i++;
-    if (clientType.match(/deq/)) {
+    if (clientType.match(/deq/)) { // gulp client -t deq breaks this
       client.dequeue(queue, clientCallback);
     } else {
       client.enqueue(queue, 'message number ' + i, clientCallback);
