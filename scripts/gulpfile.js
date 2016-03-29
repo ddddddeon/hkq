@@ -18,7 +18,6 @@ var queue = argv.queue ||
 var clientCallback = function(err, data) {
   if (err) {
     console.log('X client received error: %s %s', err.code, err.address || '');
-    return;
   } else {
     console.log('+ ' + data);
   }
@@ -130,6 +129,3 @@ gulp.task('flush', function() {
 
   fs.unlinkSync(dumpPath);
 });
-
-process.on('SIGINT', process.exit);
-process.on('SIGTERM', process.exit);
