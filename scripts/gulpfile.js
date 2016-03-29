@@ -6,7 +6,11 @@ var server;
 var client;
 var clientType = argv.type ||
                  argv.client_type ||
-                 process.env.SFQ_CLIENT_TYPE;
+                 process.env.SFQ_CLIENT_TYPE ||
+                 'enqueue';
+var queue = argv.queue ||
+            process.env.SFQ_QUEUE ||
+            'test';
 
 var clientCallback = function(err, data) {
   if (err) {
@@ -23,9 +27,9 @@ var sendMessages = function(err, data) {
   setInterval(function () {
     i++;
     if (clientType.match(/deq/)) {
-      client.dequeue('test', clientCallback);
+      client.dequeue(queue, clientCallback);
     } else {
-      client.enqueue('test', 'message number ' + i, clientCallback);
+      client.enqueue(queue, 'message number ' + i, clientCallback);
     }
   }, 10);
 };
@@ -33,20 +37,19 @@ var sendMessages = function(err, data) {
 var runClient = function() {
   var conf = {
     'port': argv.port ||
-      process.env.SFQ_LISTEN_PORT ||
-      9090,
+            process.env.SFQ_LISTEN_PORT ||
+            9090,
     'host': argv.host ||
             argv.client_host ||
             process.env.SFQ_CLIENT_HOST ||
             'localhost'
   };
 
-  var queue = argv.queue || process.env.SFQ_QUEUE;
   client = new (require('../index')).Client(conf);
   client.declareQueue(queue, sendMessages);
 };
 
-var runServer = function() {
+var runServer = function(cb) {
   var conf = {
     'listenPort': argv.port ||
                   argv.listenPort ||
@@ -63,7 +66,20 @@ var runServer = function() {
   
   server = new (require('../index')).Server(conf);
 
-  server.startServer();
+  server.startServer(function(err, serving) {
+    if (err) {
+      if (typeof cb !== 'undefined') {
+        cb(err, false);
+      } else {
+        console.log('could not start server', err);
+        process.exit(1);
+      }
+    } else {
+      if (typeof cb !== 'undefined') {
+        cb(null, true);
+      }
+    }
+  });
 };
 
 gulp.task('serve', ['server']);
@@ -81,4 +97,14 @@ gulp.task('deq', ['dequeue']);
 gulp.task('dequeue', function() {
   clientType = 'dequeue';
   runClient();
+});
+
+gulp.task('hybrid', function() {
+  runServer(function(err, serving) {
+    if (err) {
+      console.log('could not start server');
+      process.exit(1);
+    }
+    runClient();
+  });
 });
