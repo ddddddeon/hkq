@@ -1,2 +1,4 @@
 npm_debug.log
 node_modules/*
+scripts/node_modules/*
+*/queues.json

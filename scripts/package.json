@@ -1,0 +1,21 @@
+{
+  "name": "sfq-gulp-tasks",
+  "version": "0.0.1",
+  "description": "sfq gulp tasks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ddddddeon/sfq"
+  },
+  "author": "d'Eon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ddddddeon/sfq/issues"
+  },
+  "homepage": "https://github.com/ddddddeon/sfq",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.0",
+    "jshint": "^2.9.1",
+    "minimist": "^1.2.0"
+  }
+}
