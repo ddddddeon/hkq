@@ -4,10 +4,12 @@ var argv = require('minimist')(process.argv.slice(2));
 
 var server;
 var client;
+
 var clientType = argv.type ||
                  argv.client_type ||
                  process.env.SFQ_CLIENT_TYPE ||
                  'enqueue';
+
 var queue = argv.queue ||
             process.env.SFQ_QUEUE ||
             'test';
@@ -19,7 +21,7 @@ var clientCallback = function(err, data) {
   } else {
     console.log('+ ' + data);
   }
-}
+};
 
 var sendMessages = function(err, data) {
   clientCallback(err, data);
@@ -39,6 +41,7 @@ var runClient = function() {
     'port': argv.port ||
             process.env.SFQ_LISTEN_PORT ||
             9090,
+
     'host': argv.host ||
             argv.client_host ||
             process.env.SFQ_CLIENT_HOST ||
@@ -51,14 +54,16 @@ var runClient = function() {
 
 var runServer = function(cb) {
   var conf = {
-    'listenPort': argv.port ||
-                  argv.listenPort ||
-                  process.env.SFQ_LISTEN_PORT ||
-                  9090,
-    'dumpPath': argv.path ||
-                argv.dumpPath ||
-                process.env.SFQ_LISTEN_PORT ||
-                './queues.json',
+    'listenPort':   argv.port ||
+                    argv.listenPort ||
+                    process.env.SFQ_LISTEN_PORT ||
+                    9090,
+
+    'dumpPath':     argv.path ||
+                    argv.dumpPath ||
+                    process.env.SFQ_LISTEN_PORT ||
+                    './queues.json',
+
     'dumpInterval': argv.dumpInterval ||
                     process.env.SFQ_DUMP_INTERVAL ||
                     1
